@@ -1,0 +1,63 @@
+int buttonPin = D0;
+int ledPin = D7;
+bool isBlinking = false;
+
+void setup() {
+  pinMode(buttonPin, INPUT_PULLUP);
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop() {
+  if (digitalRead(buttonPin) == LOW) {
+    if (!isBlinking) {
+      blinkName();
+      isBlinking = true;
+    } else {
+      isBlinking = false;
+    }
+  }
+}
+
+void blink(int duration1, int duration2, int duration3 = 0) {
+  digitalWrite(ledPin, HIGH);
+  delay(duration1);
+  digitalWrite(ledPin, LOW);
+  delay(duration2);
+  if (duration3 > 0) {
+    delay(duration3);
+  }
+}
+
+void blinkName() {
+  String name = "Kai";
+  int dotDuration = 200;
+  int dashDuration = 3 * dotDuration;
+  int spaceDuration = 3 * dotDuration;
+  int letterSpaceDuration = 7 * dotDuration;
+  int wordSpaceDuration = 15 * dotDuration;
+  
+  // Blink "Kai" three times
+  for (int i = 0; i < 3; i++) {
+    for (int j = 0; j < name.length(); j++) {
+      char letter = name.charAt(j);
+      switch (letter) {
+        case 'A':
+          blink(dotDuration, dashDuration);
+          break;
+        case 'I':
+          blink(2 * dotDuration, spaceDuration);
+          break;
+        case 'K':
+          blink(dotDuration, dashDuration, dotDuration);
+          break;
+        default:
+          break;
+      }
+      if (j < name.length() - 1) {
+        delay(letterSpaceDuration);
+      } else {
+        delay(wordSpaceDuration);
+      }
+    }
+  }
+}
