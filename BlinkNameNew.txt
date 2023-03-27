@@ -1,0 +1,81 @@
+int ledPin = D7;
+int buttonPin = D4;
+bool isButtonPressed = false;
+
+void setup() {
+  pinMode(ledPin, OUTPUT);
+  pinMode(buttonPin, INPUT_PULLUP);
+}
+
+void loop() {
+  if (digitalRead(buttonPin) == LOW) {
+    if (!isButtonPressed) {
+      blinkMorseCode("Kai");
+      isButtonPressed = true;
+    }
+  } else {
+    isButtonPressed = false;
+  }
+}
+
+void blink(int duration) {
+  digitalWrite(ledPin, HIGH);
+  delay(duration);
+  digitalWrite(ledPin, LOW);
+  delay(duration);
+}
+
+void blinkDot() {
+  blink(200);
+}
+
+void blinkDash() {
+  blink(600);
+}
+
+void blinkMorseCode(String message) {
+  String morseCode = convertToMorseCode(message);
+  
+  for (int i = 0; i < morseCode.length(); i++) {
+    if (!isButtonPressed) {
+      // Stop blinking if the button is released
+      break;
+    }
+    
+    char currentChar = morseCode.charAt(i);
+    if (currentChar == '.') {
+      blinkDot();
+    } else if (currentChar == '-') {
+      blinkDash();
+    } else if (currentChar == ' ') {
+      delay(600);
+    }
+    delay(200);
+  }
+}
+
+String convertToMorseCode(String message) {
+  String morseCode = "";
+  for (int i = 0; i < message.length(); i++) {
+    char currentChar = toupper(message.charAt(i));
+    switch (currentChar) {
+      case 'A':
+        morseCode += ".-";
+        break;
+      case 'I':
+        morseCode += "..";
+        break;
+      case 'K':
+        morseCode += "-.-";
+        break;
+      default:
+        // If the character is not a letter we recognize, skip it
+        break;
+    }
+    // Add a space between letters
+    if (i < message.length() - 1) {
+      morseCode += " ";
+    }
+  }
+  return morseCode;
+}
